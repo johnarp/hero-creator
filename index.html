@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hero Creator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; font-size: 15px; background: #fff; color: #111; }
+
+    /* ── Nav ── */
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid #ccc;
+    }
+    nav .site-title { font-weight: bold; margin-right: 0.5rem; }
+    nav button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      padding: 0.2rem 0.4rem;
+    }
+    nav button.active {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    /* ── Views ── */
+    .view { display: none; padding: 1.25rem; }
+    .view.active { display: block; }
+
+    /* ── Concepts Grid ── */
+    #concepts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.85rem;
+    }
+    .concept-card {
+      border: 1px solid #ccc;
+      cursor: pointer;
+      padding: 1rem 0.75rem;
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 0.3rem;
+    }
+    .concept-card:hover { opacity: 0.82; }
+    .concept-card.new-card {
+      border-style: dashed;
+      font-size: 2rem;
+      color: #aaa;
+      background: none !important;
+    }
+    .card-name { font-weight: bold; font-size: 0.95rem; }
+    .card-role { font-size: 0.8rem; }
+    .card-stars { font-size: 0.8rem; letter-spacing: 1px; }
+
+    /* ── Detail Banner ── */
+    .detail-banner {
+      padding: 1.75rem 1.5rem;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .detail-banner h1 { font-size: 2.2rem; margin-bottom: 0.4rem; }
+    .detail-banner .banner-sub { font-size: 1rem; opacity: 0.9; }
+    .banner-sub .stars { letter-spacing: 2px; }
+
+    /* ── Tables ── */
+    .section-title { margin: 1.25rem 0 0.4rem; font-size: 1rem; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.45rem 0.6rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #f4f4f4; font-size: 0.85rem; }
+    td { font-size: 0.9rem; }
+    .col-button { width: 90px; }
+    .col-name   { width: 160px; }
+    .col-del    { width: 42px; text-align: center; }
+    td.empty { color: #aaa; text-align: center; }
+
+    /* ── Forms ── */
+    .form-section { max-width: 560px; }
+    .form-group { margin-bottom: 0.9rem; }
+    label { display: block; margin-bottom: 0.2rem; font-weight: bold; font-size: 0.85rem; }
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      padding: 0.35rem 0.45rem;
+      font-size: 0.92rem;
+      border: 1px solid #bbb;
+      width: 100%;
+    }
+    textarea { resize: vertical; height: 56px; }
+    input[type="color"] {
+      padding: 0.1rem;
+      height: 32px;
+      width: 60px;
+      border: 1px solid #bbb;
+      cursor: pointer;
+    }
+    input[type="number"] { width: 70px; }
+
+    /* ── Buttons ── */
+    .btn {
+      padding: 0.35rem 0.75rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: 1px solid #bbb;
+      background: #f4f4f4;
+    }
+    .btn:hover { background: #e8e8e8; }
+    .btn-small {
+      padding: 0.2rem 0.45rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      border: 1px solid #bbb;
+      background: #f4f4f4;
+    }
+    .btn-small:hover { background: #e8e8e8; }
+    .btn-danger { border-color: #c00; color: #c00; background: #fff5f5; }
+    .btn-danger:hover { background: #fde8e8; }
+    .row-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-top: 0.5rem; }
+
+    /* Edit-table inputs */
+    .edit-row input[type="text"],
+    .edit-row textarea {
+      width: 100%;
+      font-size: 0.85rem;
+    }
+
+    /* ── Settings ── */
+    .settings-section { margin-bottom: 1.5rem; }
+    .settings-section h3 { margin-bottom: 0.5rem; }
+    .settings-section p { margin-bottom: 0.75rem; font-size: 0.9rem; color: #444; }
+    #settings-msg { margin-top: 0.75rem; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ───────────────────────────────────────── -->
+<nav>
+  <span class="site-title">Hero Creator</span>
+  <button data-nav="concepts" class="active" onclick="showView('concepts')">Concepts</button>
+  <button data-nav="settings" onclick="showView('settings')">Settings</button>
+</nav>
+
+<!-- ── View: Concepts Grid ──────────────────────────────── -->
+<div id="view-concepts" class="view active">
+  <div id="concepts-grid"></div>
+</div>
+
+<!-- ── View: Detail ─────────────────────────────────────── -->
+<div id="view-detail" class="view">
+  <div class="row-actions" style="margin-bottom:0.75rem;">
+    <button class="btn" onclick="showView('concepts')">← Back</button>
+    <button class="btn" id="detail-edit-btn">✏️ Edit</button>
+    <button class="btn btn-danger" id="detail-delete-btn">🗑️ Delete</button>
+  </div>
+
+  <div class="detail-banner" id="detail-banner">
+    <h1 id="detail-name"></h1>
+    <div class="banner-sub">
+      <span class="stars" id="detail-stars"></span>
+      &nbsp;|&nbsp;
+      <span id="detail-role"></span>
+    </div>
+  </div>
+
+  <div class="section-title">Abilities</div>
+  <table id="detail-abilities-table">
+    <thead>
+      <tr>
+        <th class="col-button">Button</th>
+        <th class="col-name">Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="section-title">Team-Ups</div>
+  <table id="detail-teamups-table">
+    <thead>
+      <tr>
+        <th class="col-button">Button</th>
+        <th class="col-name">Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<!-- ── View: Edit / Create ───────────────────────────────── -->
+<div id="view-edit" class="view">
+  <div class="row-actions" style="margin-bottom:0.75rem;">
+    <button class="btn" onclick="cancelEdit()">← Cancel</button>
+    <span id="edit-title" style="font-weight:bold;"></span>
+  </div>
+
+  <div class="form-section">
+    <div class="form-group">
+      <label>Hero Name</label>
+      <input type="text" id="edit-name" placeholder="Name">
+    </div>
+    <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+      <div class="form-group">
+        <label>Role</label>
+        <select id="edit-role">
+          <option value="Vanguard">Vanguard</option>
+          <option value="Duelist">Duelist</option>
+          <option value="Strategist">Strategist</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Difficulty <span style="font-weight:normal; font-size:0.8rem;">(# of ★)</span></label>
+        <input type="number" id="edit-difficulty" min="1" value="3">
+      </div>
+      <div class="form-group">
+        <label>Banner Color</label>
+        <input type="color" id="edit-color" value="#1a1a2e">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Abilities</div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-button">Button</th>
+        <th class="col-name">Name</th>
+        <th>Description</th>
+        <th class="col-del"></th>
+      </tr>
+    </thead>
+    <tbody id="edit-abilities-body"></tbody>
+  </table>
+  <button class="btn-small" style="margin-top:0.45rem;" onclick="addRow('edit-abilities-body', 'ability')">+ Add Ability</button>
+
+  <div class="section-title">Team-Ups</div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-button">Button</th>
+        <th class="col-name">Name</th>
+        <th>Description</th>
+        <th class="col-del"></th>
+      </tr>
+    </thead>
+    <tbody id="edit-teamups-body"></tbody>
+  </table>
+  <button class="btn-small" style="margin-top:0.45rem;" onclick="addRow('edit-teamups-body', 'teamup')">+ Add Team-Up</button>
+
+  <div style="margin-top:1.5rem;">
+    <button class="btn" onclick="saveConcept()">💾 Save Concept</button>
+  </div>
+</div>
+
+<!-- ── View: Settings ────────────────────────────────────── -->
+<div id="view-settings" class="view">
+  <h2 style="margin-bottom:1rem;">Settings</h2>
+
+  <div class="settings-section">
+    <h3>Export</h3>
+    <p>Download all your concepts as a <code>.json</code> file.</p>
+    <button class="btn" onclick="exportJSON()">⬇️ Export concepts.json</button>
+  </div>
+
+  <div class="settings-section">
+    <h3>Import</h3>
+    <p>Import concepts from a previously exported <code>.json</code> file. Duplicates (by ID) are skipped.</p>
+    <label class="btn" style="display:inline-block; cursor:pointer;">
+      ⬆️ Import JSON
+      <input type="file" accept=".json" onchange="importJSON(event)" style="display:none;">
+    </label>
+  </div>
+
+  <p id="settings-msg"></p>
+</div>
+
+    <footer>
+        <span>Hero Creator is not affiliated with NetEase Games or Marvel. Trademarks belong to their respective owners.</span>
+    </footer>
+
+<!-- ── Scripts ───────────────────────────────────────────── -->
+<script>
+  // ── Storage & State ────────────────────────────────────────────
+  const STORAGE_KEY = 'marvel-rivals-concepts';
+  let concepts = [];
+  let editingId = null; // null = new concept
+
+  function loadConcepts() {
+    try { concepts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { concepts = []; }
+  }
+
+  function saveConcepts() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(concepts));
+  }
+
+  function genId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+
+  // ── View Router ────────────────────────────────────────────────
+  function showView(name) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + name).classList.add('active');
+
+    document.querySelectorAll('nav button[data-nav]').forEach(b => {
+      b.classList.toggle('active', b.dataset.nav === name);
+    });
+
+    if (name === 'concepts') renderGrid();
+  }
+
+  // ── Stars helper ───────────────────────────────────────────────
+  function starsStr(n) {
+    n = parseInt(n);
+    if (!n || n < 1) n = 1;
+    return '★'.repeat(n);
+  }
+
+  // ── Concepts Grid ──────────────────────────────────────────────
+  function renderGrid() {
+    const grid = document.getElementById('concepts-grid');
+    grid.innerHTML = '';
+
+    concepts.forEach(c => {
+      const card = document.createElement('div');
+      card.className = 'concept-card';
+      card.style.backgroundColor = c.color || '#1a1a2e';
+      card.style.color = '#fff';
+      card.innerHTML = `
+        <div class="card-name">${esc(c.name) || '<em>Unnamed</em>'}</div>
+        <div class="card-role">${esc(c.role) || ''}</div>
+        <div class="card-stars">${starsStr(c.difficulty)}</div>
+      `;
+      card.onclick = () => openDetail(c.id);
+      grid.appendChild(card);
+    });
+
+    // "New" card
+    const newCard = document.createElement('div');
+    newCard.className = 'concept-card new-card';
+    newCard.textContent = '+';
+    newCard.title = 'Create new concept';
+    newCard.onclick = () => openEdit(null);
+    grid.appendChild(newCard);
+  }
+
+  // ── Detail View ────────────────────────────────────────────────
+  function openDetail(id) {
+    const c = concepts.find(x => x.id === id);
+    if (!c) return;
+
+    document.getElementById('detail-name').textContent = c.name || 'Unnamed';
+    document.getElementById('detail-stars').textContent = starsStr(c.difficulty);
+    document.getElementById('detail-role').textContent = c.role || '';
+    document.getElementById('detail-banner').style.backgroundColor = c.color || '#1a1a2e';
+
+    populateDetailTable('detail-abilities-table', c.abilities || []);
+    populateDetailTable('detail-teamups-table', c.teamups || []);
+
+    document.getElementById('detail-edit-btn').onclick   = () => openEdit(id);
+    document.getElementById('detail-delete-btn').onclick = () => deleteConcept(id);
+
+    showView('detail');
+  }
+
+  function populateDetailTable(tableId, rows) {
+    const tbody = document.querySelector('#' + tableId + ' tbody');
+    tbody.innerHTML = '';
+    if (!rows.length) {
+      tbody.innerHTML = '<tr><td colspan="3" class="empty">—</td></tr>';
+      return;
+    }
+    rows.forEach(r => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${esc(r.button)}</td>
+        <td>${esc(r.name)}</td>
+        <td>${esc(r.description)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ── Edit View ──────────────────────────────────────────────────
+  function openEdit(id) {
+    editingId = id;
+    const c = id ? concepts.find(x => x.id === id) : null;
+
+    document.getElementById('edit-title').textContent = c ? 'Edit Hero' : 'New Hero';
+    document.getElementById('edit-name').value       = c?.name       || '';
+    document.getElementById('edit-role').value       = c?.role       || 'Vanguard';
+    document.getElementById('edit-difficulty').value = c?.difficulty || 3;
+    document.getElementById('edit-color').value      = c?.color      || '#1a1a2e';
+
+    const abBody = document.getElementById('edit-abilities-body');
+    const tuBody = document.getElementById('edit-teamups-body');
+    abBody.innerHTML = '';
+    tuBody.innerHTML = '';
+
+    (c?.abilities || []).forEach(r => addRow('edit-abilities-body', 'ability', r));
+    (c?.teamups   || []).forEach(r => addRow('edit-teamups-body',   'teamup',  r));
+
+    showView('edit');
+  }
+
+  function cancelEdit() {
+    // If we were editing an existing concept, go back to its detail view
+    if (editingId) {
+      openDetail(editingId);
+    } else {
+      showView('concepts');
+    }
+  }
+
+  function addRow(tbodyId, type, r) {
+    r = r || {};
+    const placeholder = type === 'ability' ? 'LMB' : 'Team-Up';
+    const tbody = document.getElementById(tbodyId);
+    const tr = document.createElement('tr');
+    tr.className = 'edit-row';
+    tr.innerHTML = `
+      <td><input type="text" placeholder="${placeholder}" value="${esc(r.button || '')}"></td>
+      <td><input type="text" placeholder="Name" value="${esc(r.name || '')}"></td>
+      <td><textarea placeholder="Description">${esc(r.description || '')}</textarea></td>
+      <td><button class="btn-small btn-danger" onclick="this.closest('tr').remove()">✕</button></td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  function collectRows(tbodyId) {
+    const rows = [];
+    document.getElementById(tbodyId).querySelectorAll('tr.edit-row').forEach(tr => {
+      const inputs = tr.querySelectorAll('input[type="text"], textarea');
+      rows.push({
+        button:      inputs[0].value.trim(),
+        name:        inputs[1].value.trim(),
+        description: inputs[2].value.trim(),
+      });
+    });
+    return rows;
+  }
+
+  function saveConcept() {
+    const name       = document.getElementById('edit-name').value.trim();
+    const role       = document.getElementById('edit-role').value;
+    const difficulty = parseInt(document.getElementById('edit-difficulty').value) || 1;
+    const color      = document.getElementById('edit-color').value;
+    const abilities  = collectRows('edit-abilities-body');
+    const teamups    = collectRows('edit-teamups-body');
+
+    if (editingId) {
+      const c = concepts.find(x => x.id === editingId);
+      Object.assign(c, { name, role, difficulty, color, abilities, teamups });
+    } else {
+      concepts.push({ id: genId(), name, role, difficulty, color, abilities, teamups });
+    }
+
+    saveConcepts();
+
+    if (editingId) {
+      openDetail(editingId);
+    } else {
+      showView('concepts');
+    }
+  }
+
+  function deleteConcept(id) {
+    if (!confirm('Delete this concept? This cannot be undone.')) return;
+    concepts = concepts.filter(x => x.id !== id);
+    saveConcepts();
+    showView('concepts');
+  }
+
+  // ── Settings ───────────────────────────────────────────────────
+  function exportJSON() {
+    const blob = new Blob([JSON.stringify(concepts, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'marvel-rivals-concepts.json';
+    a.click();
+  }
+
+  function importJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const msg = document.getElementById('settings-msg');
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!Array.isArray(data)) throw new Error();
+        let added = 0;
+        data.forEach(c => {
+          if (c.id && !concepts.find(x => x.id === c.id)) {
+            concepts.push(c);
+            added++;
+          }
+        });
+        saveConcepts();
+        msg.style.color = 'green';
+        msg.textContent = `Imported ${added} new concept(s). ${data.length - added} duplicate(s) skipped.`;
+      } catch {
+        msg.style.color = 'red';
+        msg.textContent = 'Error: could not parse file. Make sure it is a valid concepts JSON.';
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
+  // ── Utility ────────────────────────────────────────────────────
+  function esc(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // ── Init ───────────────────────────────────────────────────────
+  loadConcepts();
+  renderGrid();
+</script>
+</body>
+</html>
