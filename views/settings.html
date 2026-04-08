@@ -1,0 +1,18 @@
+<h2 style="margin-bottom:1rem;">Settings</h2>
+
+<div class="settings-section">
+  <h3>Export</h3>
+  <p>Download all your concepts as a <code>.json</code> file.</p>
+  <button class="btn" onclick="exportJSON()">⬇️ Export concepts.json</button>
+</div>
+
+<div class="settings-section">
+  <h3>Import</h3>
+  <p>Import concepts from a previously exported <code>.json</code> file. Duplicates (by ID) are skipped.</p>
+  <label class="btn" style="display:inline-block; cursor:pointer;">
+    ⬆️ Import JSON
+    <input type="file" accept=".json" onchange="importJSON(event)" style="display:none;">
+  </label>
+</div>
+
+<p id="settings-msg"></p>

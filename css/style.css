@@ -1,0 +1,147 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: sans-serif; font-size: 15px; background: #fff; color: #111; }
+
+/* ── Nav ── */
+nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid #ccc;
+}
+nav .site-title { font-weight: bold; margin-right: 0.5rem; }
+nav button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 0.2rem 0.4rem;
+}
+nav button.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* ── App container ── */
+#app { padding: 1.25rem; }
+
+/* ── Footer ── */
+footer {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #ccc;
+  font-size: 0.78rem;
+  color: #888;
+  margin-top: 2rem;
+}
+
+/* ── Concepts Grid ── */
+#concepts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.85rem;
+}
+.concept-card {
+  border: 1px solid #ccc;
+  cursor: pointer;
+  padding: 1rem 0.75rem;
+  min-height: 110px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+}
+.concept-card:hover { opacity: 0.82; }
+.concept-card.new-card {
+  border-style: dashed;
+  font-size: 2rem;
+  color: #aaa;
+  background: none !important;
+}
+.card-name  { font-weight: bold; font-size: 0.95rem; }
+.card-role  { font-size: 0.8rem; }
+.card-stars { font-size: 0.8rem; letter-spacing: 1px; }
+
+/* ── Detail Banner ── */
+.detail-banner {
+  padding: 1.75rem 1.5rem;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+.detail-banner h1 { font-size: 2.2rem; margin-bottom: 0.4rem; }
+.detail-banner .banner-sub { font-size: 1rem; opacity: 0.9; }
+.banner-sub .stars { letter-spacing: 2px; }
+
+/* ── Tables ── */
+.section-title { margin: 1.25rem 0 0.4rem; font-size: 1rem; font-weight: bold; }
+table { width: 100%; border-collapse: collapse; }
+th, td {
+  border: 1px solid #ccc;
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+}
+th { background: #f4f4f4; font-size: 0.85rem; }
+td { font-size: 0.9rem; }
+.col-button { width: 90px; }
+.col-name   { width: 160px; }
+.col-del    { width: 42px; text-align: center; }
+td.empty    { color: #aaa; text-align: center; }
+
+/* ── Forms ── */
+.form-section { max-width: 560px; }
+.form-group { margin-bottom: 0.9rem; }
+label { display: block; margin-bottom: 0.2rem; font-weight: bold; font-size: 0.85rem; }
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  padding: 0.35rem 0.45rem;
+  font-size: 0.92rem;
+  border: 1px solid #bbb;
+  width: 100%;
+}
+textarea { resize: vertical; height: 56px; }
+input[type="color"] {
+  padding: 0.1rem;
+  height: 32px;
+  width: 60px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+}
+input[type="number"] { width: 70px; }
+
+/* ── Buttons ── */
+.btn {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid #bbb;
+  background: #f4f4f4;
+}
+.btn:hover { background: #e8e8e8; }
+.btn-small {
+  padding: 0.2rem 0.45rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border: 1px solid #bbb;
+  background: #f4f4f4;
+}
+.btn-small:hover { background: #e8e8e8; }
+.btn-danger { border-color: #c00; color: #c00; background: #fff5f5; }
+.btn-danger:hover { background: #fde8e8; }
+.row-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-top: 0.5rem; }
+
+/* ── Edit-table inputs ── */
+.edit-row input[type="text"],
+.edit-row textarea {
+  width: 100%;
+  font-size: 0.85rem;
+}
+
+/* ── Settings ── */
+.settings-section { margin-bottom: 1.5rem; }
+.settings-section h3 { margin-bottom: 0.5rem; }
+.settings-section p { margin-bottom: 0.75rem; font-size: 0.9rem; color: #444; }
+#settings-msg { margin-top: 0.75rem; font-size: 0.9rem; }

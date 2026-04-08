@@ -1,0 +1,61 @@
+<div class="row-actions" style="margin-bottom:0.75rem;">
+  <button class="btn" onclick="cancelEdit()">← Cancel</button>
+  <span id="edit-title" style="font-weight:bold;"></span>
+</div>
+
+<div class="form-section">
+  <div class="form-group">
+    <label>Hero Name</label>
+    <input type="text" id="edit-name" placeholder="Name">
+  </div>
+  <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+    <div class="form-group">
+      <label>Role</label>
+      <select id="edit-role">
+        <option value="Vanguard">Vanguard</option>
+        <option value="Duelist">Duelist</option>
+        <option value="Strategist">Strategist</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Difficulty <span style="font-weight:normal; font-size:0.8rem;">(# of ★)</span></label>
+      <input type="number" id="edit-difficulty" min="1" value="3">
+    </div>
+    <div class="form-group">
+      <label>Banner Color</label>
+      <input type="color" id="edit-color" value="#1a1a2e">
+    </div>
+  </div>
+</div>
+
+<div class="section-title">Abilities</div>
+<table>
+  <thead>
+    <tr>
+      <th class="col-button">Button</th>
+      <th class="col-name">Name</th>
+      <th>Description</th>
+      <th class="col-del"></th>
+    </tr>
+  </thead>
+  <tbody id="edit-abilities-body"></tbody>
+</table>
+<button class="btn-small" style="margin-top:0.45rem;" onclick="addRow('edit-abilities-body', 'ability')">+ Add Ability</button>
+
+<div class="section-title">Team-Ups</div>
+<table>
+  <thead>
+    <tr>
+      <th class="col-button">Button</th>
+      <th class="col-name">Name</th>
+      <th>Description</th>
+      <th class="col-del"></th>
+    </tr>
+  </thead>
+  <tbody id="edit-teamups-body"></tbody>
+</table>
+<button class="btn-small" style="margin-top:0.45rem;" onclick="addRow('edit-teamups-body', 'teamup')">+ Add Team-Up</button>
+
+<div style="margin-top:1.5rem;">
+  <button class="btn" onclick="saveConcept()">💾 Save Concept</button>
+</div>
