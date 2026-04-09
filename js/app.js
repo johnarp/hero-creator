@@ -1,6 +1,5 @@
 // app.js — view router, nav highlighting, shared helpers
 
-// Cache fetched view HTML so we don't re-fetch on every nav
 const viewCache = {};
 
 async function showView(name) {
@@ -10,11 +9,10 @@ async function showView(name) {
   }
   document.getElementById('app').innerHTML = viewCache[name];
 
-  document.querySelectorAll('nav button[data-nav]').forEach(b => {
-    b.classList.toggle('active', b.dataset.nav === name);
+  document.querySelectorAll('nav ul a[data-nav]').forEach(a => {
+    a.classList.toggle('active', a.dataset.nav === name);
   });
 
-  // Run any post-load init for this view
   if (name === 'concepts') renderGrid();
 }
 

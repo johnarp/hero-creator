@@ -4,20 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hero Creator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <nav>
-    <span class="site-title">Hero Creator</span>
-    <button data-nav="concepts" onclick="showView('concepts')">Concepts</button>
-    <button data-nav="settings" onclick="showView('settings')">Settings</button>
-  </nav>
+  <header>
+    <nav>
+      <h1>Hero Creator</h1>
+      <ul>
+        <li><a data-nav="concepts" onclick="showView('concepts')">Concepts</a></li>
+        <li><a data-nav="settings" onclick="showView('settings')">Settings</a></li>
+      </ul>
+    </nav>
+  </header>
 
-  <div id="app"></div>
+  <main>
+    <div id="app"></div>
+  </main>
 
   <footer>
-    <span>Hero Creator is not affiliated with NetEase Games or Marvel. Trademarks belong to their respective owners.</span>
+    Hero Creator is not affiliated with NetEase Games or Marvel. Trademarks belong to their respective owners.
   </footer>
 
   <script src="js/storage.js"></script>

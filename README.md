@@ -12,10 +12,10 @@
 
 ## To Do
 
-- [ ] Styling
+- [x] Styling
 - [x] Separate CSS & JS from HTML
 - [x] Images
-- [ ] Improved UI
+- [x] Improved UI
 - [ ] Styled buttons for concept
 - [ ] Templates/presets
 

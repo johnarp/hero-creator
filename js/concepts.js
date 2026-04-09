@@ -5,33 +5,40 @@ function renderGrid() {
   grid.innerHTML = '';
 
   concepts.forEach(c => {
-    const card = document.createElement('div');
-    card.className = 'concept-card';
-    card.style.backgroundColor = c.color || '#1a1a2e';
-    card.style.color = '#fff';
-    card.innerHTML = `
-      <div class="card-name">${esc(c.name) || '<em>Unnamed</em>'}</div>
-      <div class="card-role">${esc(c.role) || ''}</div>
-      <div class="card-stars">${starsStr(c.difficulty)}</div>
+    const outer = document.createElement('div');
+    outer.className = 'concept-card-outer';
+    outer.innerHTML = `
+      <div class="concept-card-wrap">
+        <div class="concept-card" style="background-color:${esc(c.color || '#1a1a2e')};">
+          <div class="card-name">${esc(c.name) || '<em>Unnamed</em>'}</div>
+          <div class="card-role">${esc(c.role) || ''}</div>
+          <div class="card-stars">${starsStr(c.difficulty)}</div>
+        </div>
+      </div>
     `;
-    card.onclick = () => openDetail(c.id);
-    grid.appendChild(card);
+    outer.onclick = () => openDetail(c.id);
+    grid.appendChild(outer);
   });
 
   // "New" card — always last
-  const newCard = document.createElement('div');
-  newCard.className = 'concept-card new-card';
-  newCard.textContent = '+';
-  newCard.title = 'Create new concept';
-  newCard.onclick = () => openEdit(null);
-  grid.appendChild(newCard);
+  const newOuter = document.createElement('div');
+  newOuter.className = 'concept-card-outer new-card';
+  newOuter.title = 'Create new concept';
+  newOuter.innerHTML = `
+    <div class="concept-card-wrap">
+      <div class="concept-card">
+        <span class="new-card-icon">+</span>
+      </div>
+    </div>
+  `;
+  newOuter.onclick = () => openEdit(null);
+  grid.appendChild(newOuter);
 }
 
 async function openDetail(id) {
   const c = concepts.find(x => x.id === id);
   if (!c) return;
 
-  // Load the detail view fresh (bypass cache so DOM is clean)
   const res = await fetch('views/detail.html');
   document.getElementById('app').innerHTML = await res.text();
 
@@ -51,13 +58,13 @@ function populateDetailTable(tableId, rows) {
   const tbody = document.querySelector('#' + tableId + ' tbody');
   tbody.innerHTML = '';
   if (!rows.length) {
-    tbody.innerHTML = '<tr><td colspan="3" class="empty">—</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="3" class="empty">No entries yet.</td></tr>';
     return;
   }
   rows.forEach(r => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${esc(r.button)}</td>
+      <td class="col-button">${esc(r.button)}</td>
       <td>${esc(r.name)}</td>
       <td>${esc(r.description)}</td>
     `;

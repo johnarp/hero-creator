@@ -38,7 +38,7 @@ function addRow(tbodyId, type, r) {
     <td><input type="text" placeholder="${placeholder}" value="${esc(r.button || '')}"></td>
     <td><input type="text" placeholder="Name" value="${esc(r.name || '')}"></td>
     <td><textarea placeholder="Description">${esc(r.description || '')}</textarea></td>
-    <td><button class="btn-small btn-danger" onclick="this.closest('tr').remove()">✕</button></td>
+    <td><button class="btn btn-sm danger" onclick="this.closest('tr').remove()">✕</button></td>
   `;
   tbody.appendChild(tr);
 }
